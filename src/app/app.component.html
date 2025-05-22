@@ -1,0 +1,46 @@
+<div class="container">
+  <form>
+    <div>
+      <label>Id</label>
+      <input type="text" disabled [(ngModel)]="id" name="id">
+    </div>
+
+    <div>
+      <label>Author</label>
+      <input type="text" [(ngModel)]="author" name="author">
+    </div>
+
+    <div>
+      <label>Musica</label>
+      <input type="text" [(ngModel)]="musica" name="musica">
+    </div>
+
+    <button (click)="buttonClick()">
+      {{ id ? 'Salvar' : 'Criar' }}
+    </button>
+  </form>
+
+  <table>
+    <thead>
+      <th>Id</th>
+      <th>Author</th>
+      <th>Musica</th>
+      <th>...</th>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let musica of musicas$ | async">
+        <td>{{ musica.id }}</td>
+        <td>{{ musica.author }}</td>
+        <td>{{ musica.text }}</td>
+        <td>
+          <span class="actions">
+            <span (click)="preencherCampos(musica)">Alterar</span>
+            <span (click)="remover(musica.id!)">Deletar</span>
+          </span>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>

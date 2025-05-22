@@ -1,0 +1,34 @@
+{
+  "musics": [
+    {
+      "id": "1",
+      "author": "Mc Kevin",
+      "text": "Cavalo de troia"
+    },
+    {
+      "id": "2",
+      "author": "Lil peep",
+      "text": "Runaway"
+    },
+    {
+      "id": "3",
+      "author": "XXXTentacion",
+      "text": "Moonlight"
+    },
+    {
+      "id": "5",
+      "author": "Pedrosa",
+      "text": "Terça de tarde"
+    },
+    {
+      "id": "6",
+      "author": "MC Luuky",
+      "text": "Menina linda"
+    },
+    {
+      "id": "7",
+      "author": "MC IG",
+      "text": "400K"
+    }
+  ]
+}

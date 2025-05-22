@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { environment } from 'src/environments/environment';
+// import { environment } from 'src/environments/environment';
 import { MusicService } from './services/music.service';
 import { Music } from './models/music.model';
 import { Observable } from 'rxjs';
@@ -12,7 +12,6 @@ import { Observable } from 'rxjs';
 export class AppComponent {
   title = 'angular-api-rest';
 
-  // musicas: Music[] = []
   musicas$ = new Observable<Music[]>();
 
   // form
@@ -25,9 +24,6 @@ export class AppComponent {
   }
 
   obterMusicasCadastradas() {
-    // this.musicService.obterMusicas()
-    //   .subscribe(musicas => this.musicas = musicas)
-
     this.musicas$ = this.musicService.obterMusicas();
   }
 

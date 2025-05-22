@@ -1,31 +1,80 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { MusicService } from './services/music.service';
+import { of } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 
 describe('AppComponent', () => {
+  let component: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
+  let musicServiceSpy: jasmine.SpyObj<MusicService>;
+
   beforeEach(async () => {
+    const spy = jasmine.createSpyObj('MusicService', [
+      'obterMusicas', 'cadastrarMusica', 'editarMusica', 'remover'
+    ]);
+
     await TestBed.configureTestingModule({
-      declarations: [
-        AppComponent
-      ],
+      declarations: [AppComponent],
+      imports: [FormsModule],
+      providers: [{ provide: MusicService, useValue: spy }]
     }).compileComponents();
+
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
+    musicServiceSpy = TestBed.inject(MusicService) as jasmine.SpyObj<MusicService>;
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+  it('deve criar o componente', () => {
+    expect(component).toBeTruthy();
   });
 
-  it(`should have as title 'angular-api-rest'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('angular-api-rest');
+  it('deve chamar obterMusicasCadastradas ao iniciar', () => {
+    const mockMusics = [{ id: 1, author: 'Autor', text: 'Texto' }];
+    musicServiceSpy.obterMusicas.and.returnValue(of(mockMusics));
+
+    component.obterMusicasCadastradas();
+
+    expect(musicServiceSpy.obterMusicas).toHaveBeenCalled();
   });
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('angular-api-rest app is running!');
+  it('deve cadastrar uma música nova', () => {
+    component.author = 'Autor Teste';
+    component.musica = 'Texto Teste';
+    component.id = '';
+
+    musicServiceSpy.cadastrarMusica.and.returnValue(of({ id: 1, author: 'Autor Teste', text: 'Texto Teste' }));
+    musicServiceSpy.obterMusicas.and.returnValue(of([]));
+
+    component.buttonClick();
+
+    expect(musicServiceSpy.cadastrarMusica).toHaveBeenCalledWith({
+      author: 'Autor Teste',
+      text: 'Texto Teste'
+    });
+  });
+
+  it('deve atualizar uma música existente', () => {
+    component.id = '1';
+    component.author = 'Novo Autor';
+    component.musica = 'Nova Música';
+
+    const musicaAtualizada = { id: 1, author: 'Novo Autor', text: 'Nova Música' };
+
+    musicServiceSpy.editarMusica.and.returnValue(of(musicaAtualizada));
+    musicServiceSpy.obterMusicas.and.returnValue(of([]));
+
+    component.buttonClick();
+
+    expect(musicServiceSpy.editarMusica).toHaveBeenCalledWith(musicaAtualizada);
+  });
+
+  it('deve remover uma música', () => {
+    musicServiceSpy.remover.and.returnValue(of(void 0));
+    musicServiceSpy.obterMusicas.and.returnValue(of([]));
+
+    component.remover(1);
+
+    expect(musicServiceSpy.remover).toHaveBeenCalledWith(1);
   });
 });
